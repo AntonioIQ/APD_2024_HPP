@@ -3,11 +3,19 @@ Este script realiza la inferencia de un modelo de Machine Learning
 para calcular precios de casas.
 """
 
-# Importar las librerías necesarias
+import argparse
 import numpy as np
-
-# Importar las funciones necesarias desde outils.py
 from src.outils import get_features, load_model, load_dataframe, save_dataframe
+
+# Crear el analizador
+parser = argparse.ArgumentParser(description='Realizar inferencias con el modelo entrenado')
+
+# Agregar argumentos con valores predeterminados
+parser.add_argument('--predict_data', type=str, default='data/inference/test.csv', help='Ruta al archivo de datos para la inferencia')
+parser.add_argument('--output', type=str, default='data/predictions/data_predicted.csv', help='Ruta al archivo de salida para las predicciones')
+
+# Analizar los argumentos
+args = parser.parse_args()
 
 # Cargar el modelo entrenado
 best_model = load_model('artifacts/best_model.pkl')
@@ -20,8 +28,7 @@ selector = load_model('data/prep/selector.pkl')
 features = get_features()
 
 # Cargar los datos de predicción
-PREDICT_PATH = 'data/inference/test.csv'
-df_predict = load_dataframe(PREDICT_PATH)
+df_predict = load_dataframe(args.predict_data)
 
 # Preparar los datos de predicción
 X_predict = df_predict[features]
@@ -35,8 +42,8 @@ predictions = best_model.predict(X_predict_selected)
 df_predict['SalePrice'] = np.exp(predictions)
 
 # Guardar el DataFrame como un archivo CSV
-OUTPUT_PATH = 'data/predictions/data_predicted.csv'
-save_dataframe(df_predict, OUTPUT_PATH)
+save_dataframe(df_predict, args.output)
 
 print('Se ha generado un archivo con la predicción de precios de casas, '
       'puede proceder a descargarlo de la carpeta data/predictions.')
+

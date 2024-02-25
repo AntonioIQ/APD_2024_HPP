@@ -4,15 +4,25 @@ Este script realiza el entrenamiento de un modelo
 de Machine Learning para calcular precios de casas.
 """
 
-# Importar las librerías necesarias
+import argparse
 import pandas as pd
 from xgboost import XGBRegressor
-
-# Importar las funciones necesarias desde outils.py y metrics.py
 from src.outils import load_model, load_numpy_data, save_model, save_dataframe
 from src.metrics import evaluate_model
-
 import yaml
+
+# Crear el analizador
+parser = argparse.ArgumentParser(description='Entrenar un modelo de Machine Learning')
+
+# Agregar argumentos con valores predeterminados
+parser.add_argument('--train_data', type=str, default='data/prep/X_train_selected.npy', help='Ruta al archivo de datos de entrenamiento')
+parser.add_argument('--val_data', type=str, default='data/prep/X_val.npy', help='Ruta al archivo de datos de validación')
+parser.add_argument('--test_data', type=str, default='data/prep/X_test.npy', help='Ruta al archivo de datos de prueba')
+parser.add_argument('--model', type=str, default='artifacts/model.pkl', help='Ruta al archivo del modelo')
+parser.add_argument('--test_size', type=float, default=0.2, help='Proporción del conjunto de datos a incluir en la división de prueba')
+
+# Analizar los argumentos
+args = parser.parse_args()
 
 # Cargar los hiperparámetros desde el archivo de configuración
 with open('config.yaml', 'r') as file:
@@ -22,7 +32,7 @@ hyperparameters = config['best_model']['hyperparameters']
 seed = config['best_model']['seed']
 
 # Cargar los datos preprocesados
-X_train_selected = load_numpy_data('data/prep/X_train_selected.npy')
+X_train_selected = load_numpy_data(args.train_data)
 y_train = load_numpy_data('data/prep/y_train.npy')
 
 # Crear y entrenar el modelo XGBoost
@@ -38,16 +48,16 @@ model = XGBRegressor(n_estimators=hyperparameters['n_estimators'],
 model.fit(X_train_selected, y_train)
 
 # Guardar el modelo entrenado
-save_model(model, 'artifacts/model.pkl')
+save_model(model, args.model)
 
 # Evaluar el modelo en los datos de entrenamiento y guardar las métricas
 df_metrics = evaluate_model(model, X_train_selected, y_train, 'XGBoost_Training')
 save_dataframe(df_metrics, 'artifacts/evaluation.txt')
 
 # Cargar los datos de validación y prueba
-X_val = load_numpy_data('data/prep/X_val.npy')
+X_val = load_numpy_data(args.val_data)
 y_val = load_numpy_data('data/prep/y_val.npy')
-X_test = load_numpy_data('data/prep/X_test.npy')
+X_test = load_numpy_data(args.test_data)
 y_test = load_numpy_data('data/prep/y_test.npy')
 
 # Cargar el selector de características

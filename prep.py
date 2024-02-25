@@ -9,6 +9,7 @@ https://www.kaggle.com/competitions/house-prices-advanced-regression-techniques/
 NOTA IMPORTANTE: Para descargarlos, se necesita tener una cuenta de Kaggle
 """
 
+import argparse
 import numpy as np
 from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import train_test_split
@@ -19,11 +20,21 @@ from sklearn.linear_model import LinearRegression
 from src.outils import check_create_dir, load_csv_data
 from src.outils import save_model, save_data, get_features
 
+# Crear el analizador
+parser = argparse.ArgumentParser(description='Preprocesar los datos para el entrenamiento del modelo')
+
+# Agregar argumentos con valores predeterminados
+parser.add_argument('--raw_data', type=str, default='data/raw/train.csv', help='Ruta al archivo de datos sin procesar')
+parser.add_argument('--test_size', type=float, default=0.2, help='Proporción del conjunto de datos a incluir en la división de prueba')
+
+# Analizar los argumentos
+args = parser.parse_args()
+
 # Verificar si la carpeta data/raw/ existe, y si no, crearla
 check_create_dir('data/raw/')
 
 # Cargar los datos de entrenamiento
-df_train = load_csv_data('data/raw/train.csv')
+df_train = load_csv_data(args.raw_data)
 
 # Ingeniería de características
 features = get_features()
@@ -44,7 +55,7 @@ y = df_train['SalePrice']
 
 # Conjunto de entrenamiento (80% de los datos) y un temporal (20%)
 X_temp, X_test, y_temp, y_test = train_test_split(
-    X, y, test_size=0.2, random_state=42)
+    X, y, test_size=args.test_size, random_state=42)
 
 # Temporal en conjuntos de validación y prueba (cada uno con 10% )
 X_train, X_val, y_train, y_val = train_test_split(
