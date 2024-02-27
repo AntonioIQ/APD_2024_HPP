@@ -82,3 +82,31 @@ El entrenamiento del modelo se realiza con éxito. La métrica evaluada se ubica
 
 
 
+PS C:\Users\antap\OneDrive\Documents\M CD\Arquitectura del Producto de Datos\Casas_Price_Predict\APD_2024_HPP\src> python -m pytest test_outils.py
+============================================================================================== test session starts ==============================================================================================
+platform win32 -- Python 3.9.0, pytest-8.0.2, pluggy-1.4.0
+rootdir: C:\Users\antap\OneDrive\Documents\M CD\Arquitectura del Producto de Datos\Casas_Price_Predict\APD_2024_HPP\src
+collected 6 items
+
+test_outils.py ......                                                                                                                                                                                      [100%]
+
+=============================================================================================== 6 passed in 1.15s ===============================================================================================
+
+S C:\Users\antap\OneDrive\Documents\M CD\Arquitectura del Producto de Datos\Casas_Price_Predict\APD_2024_HPP\src> python -m pytest test_metrics.py
+============================================================================================== test session starts ==============================================================================================
+platform win32 -- Python 3.9.0, pytest-8.0.2, pluggy-1.4.0
+rootdir: C:\Users\antap\OneDrive\Documents\M CD\Arquitectura del Producto de Datos\Casas_Price_Predict\APD_2024_HPP\src
+collected 2 items
+
+test_metrics.py ..                                                                                                                                                                                         [100%] 
+
+=============================================================================================== 2 passed in 0.63s ===============================================================================================
+S C:\Users\antap\OneDrive\Documents\M CD\Arquitectura del Producto de Datos\Casas_Price_Predict\APD_2024_HPP\src> python -m pytest test_logs.py
+============================================================================================== test session starts ==============================================================================================
+platform win32 -- Python 3.9.0, pytest-8.0.2, pluggy-1.4.0
+rootdir: C:\Users\antap\OneDrive\Documents\M CD\Arquitectura del Producto de Datos\Casas_Price_Predict\APD_2024_HPP\src
+collected 1 item                                                                                                                                                                                                  
+
+test_logs.py .                                                                                                                                                                                             [100%]
+
+=============================================================================================== 1 passed in 0.02s ===============================================================================================

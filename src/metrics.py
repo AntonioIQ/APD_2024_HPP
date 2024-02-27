@@ -8,7 +8,7 @@ from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
 import pandas as pd
 import numpy as np
 
-def mean_absolute_percentage_error(y_true, y_pred):
+def mean_absolute_percentage_error(y_true, y_pred, epsilon=1e-10):
     """
     Calcula el error porcentual absoluto medio (MAPE).
     
@@ -20,11 +20,13 @@ def mean_absolute_percentage_error(y_true, y_pred):
     Parámetros:
     y_true (array-like): Valores verdaderos para y.
     y_pred (array-like): Valores predichos para y.
+    epsilon (float): Pequeña constante para estabilidad numérica (default: 1e-10).
 
     Retorna:
     float: El error porcentual absoluto medio (MAPE).
     """
-    return np.mean(np.abs((y_true - y_pred) / y_true)) * 100
+    return np.mean(np.abs((y_true - y_pred) / (y_true + epsilon))) * 100
+
 
 def evaluate_model(model, X, y, model_name):
     """

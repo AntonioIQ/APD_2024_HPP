@@ -12,13 +12,16 @@ def configure_logger(script_name):
     # Crear los directorios necesarios
     os.makedirs(f'logs/{date_time}', exist_ok=True)
 
-    # Configurar el logger
-    logging.basicConfig(filename=f'logs/{date_time}/{script_name}.log',
-                        level=logging.DEBUG,
-                        format='%(asctime)s %(levelname)-8s %(message)s',
-                        datefmt='%Y-%m-%d %H:%M:%S')
-
     # Crear un logger
     logger = logging.getLogger()
-    return logger
+    logger.setLevel(logging.DEBUG)
 
+    # Eliminar todos los manejadores existentes del logger
+    logger.handlers = []
+
+    # Añadir un FileHandler al logger
+    file_handler = logging.FileHandler(filename=f'logs/{date_time}/{script_name}.log')
+    file_handler.setFormatter(logging.Formatter('%(asctime)s %(levelname)-8s %(message)s', datefmt='%Y-%m-%d %H:%M:%S'))
+    logger.addHandler(file_handler)
+
+    return logger
