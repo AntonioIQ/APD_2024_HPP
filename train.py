@@ -7,28 +7,15 @@ de Machine Learning para calcular precios de casas.
 import argparse
 import pandas as pd
 from xgboost import XGBRegressor
-from src.outils import load_model, load_numpy_data, save_model, save_dataframe
+from src.outils import load_model, load_numpy_data, save_model, save_dataframe, check_create_dir
 from src.metrics import evaluate_model
 import yaml
-import logging
 from datetime import datetime
 
-from src.outils import check_create_dir
-
-# Crear un timestamp para los nombres de los archivos de log
-now = datetime.now()
-date_time = now.strftime("%Y%m%d-%H%M%S")
-
-# Crear el directorio si no existe
-check_create_dir(f'logs/{date_time}')
+from src.logs import configure_logger
 
 # Configurar el logger
-logging.basicConfig(filename=f'logs/{date_time}/train.log',
-                    level=logging.DEBUG,
-                    format='%(asctime)s %(levelname)-8s %(message)s',
-                    datefmt='%Y-%m-%d %H:%M:%S')
-# Crear un logger
-logger = logging.getLogger()
+logger = configure_logger('train')
 
 # Crear el analizador
 parser = argparse.ArgumentParser(description='Entrenar un modelo de Machine Learning')

@@ -5,25 +5,11 @@ para calcular precios de casas.
 
 import argparse
 import numpy as np
-import logging
-from datetime import datetime
-from src.outils import get_features, load_model, load_dataframe, save_dataframe, check_create_dir
-
-# Crear un timestamp para los nombres de los archivos de log
-now = datetime.now()
-date_time = now.strftime("%Y%m%d-%H%M%S")
-
-# Crear el directorio si no existe
-check_create_dir(f'logs/{date_time}')
+from src.outils import get_features, load_model, load_dataframe, save_dataframe
+from src.logs import configure_logger
 
 # Configurar el logger
-logging.basicConfig(filename=f'logs/{date_time}/inference.log',
-                    level=logging.DEBUG,
-                    format='%(asctime)s %(levelname)-8s %(message)s',
-                    datefmt='%Y-%m-%d %H:%M:%S')
-
-# Crear un logger
-logger = logging.getLogger()
+logger = configure_logger('inference')
 
 # Crear el analizador
 parser = argparse.ArgumentParser(description='Realizar inferencias con el modelo entrenado')

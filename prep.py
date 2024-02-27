@@ -16,29 +16,14 @@ from sklearn.model_selection import train_test_split
 from sklearn.impute import SimpleImputer
 from sklearn.feature_selection import RFECV
 from sklearn.linear_model import LinearRegression
-import logging
 from datetime import datetime
 
-from src.outils import check_create_dir, load_csv_data
-from src.outils import save_model, save_data, get_features
-from src import logs
-from src.outils import check_create_dir
+from src.outils import load_csv_data, save_model, save_data, get_features, check_create_dir
 
-# Crear un timestamp para los nombres de los archivos de log
-now = datetime.now()
-date_time = now.strftime("%Y%m%d-%H%M%S")
-
-# Crear el directorio si no existe
-check_create_dir(f'logs/{date_time}')
+from src.logs import configure_logger
 
 # Configurar el logger
-logging.basicConfig(filename=f'logs/{date_time}/prep.log',
-                    level=logging.DEBUG,
-                    format='%(asctime)s %(levelname)-8s %(message)s',
-                    datefmt='%Y-%m-%d %H:%M:%S')
-
-# Crear un logger
-logger = logging.getLogger()
+logger = configure_logger('prep')
 
 # Crear el analizador
 parser = argparse.ArgumentParser(description='Preprocesar los datos para el entrenamiento del modelo')
