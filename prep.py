@@ -16,9 +16,29 @@ from sklearn.model_selection import train_test_split
 from sklearn.impute import SimpleImputer
 from sklearn.feature_selection import RFECV
 from sklearn.linear_model import LinearRegression
+import logging
+from datetime import datetime
 
 from src.outils import check_create_dir, load_csv_data
 from src.outils import save_model, save_data, get_features
+from src import logs
+from src.outils import check_create_dir
+
+# Crear un timestamp para los nombres de los archivos de log
+now = datetime.now()
+date_time = now.strftime("%Y%m%d-%H%M%S")
+
+# Crear el directorio si no existe
+check_create_dir(f'logs/{date_time}')
+
+# Configurar el logger
+logging.basicConfig(filename=f'logs/{date_time}/prep.log',
+                    level=logging.DEBUG,
+                    format='%(asctime)s %(levelname)-8s %(message)s',
+                    datefmt='%Y-%m-%d %H:%M:%S')
+
+# Crear un logger
+logger = logging.getLogger()
 
 # Crear el analizador
 parser = argparse.ArgumentParser(description='Preprocesar los datos para el entrenamiento del modelo')
@@ -34,20 +54,47 @@ args = parser.parse_args()
 check_create_dir('data/raw/')
 
 # Cargar los datos de entrenamiento
-df_train = load_csv_data(args.raw_data)
+try:
+    # Cargar los datos de entrenamiento
+    df_train = load_csv_data(args.raw_data)
+    logger.info('Datos cargados exitosamente')
+    logger.debug(f'Número de filas: {df_train.shape[0]}, número de columnas: {df_train.shape[1]}')
+except Exception as e:
+    logger.error(f'Error al cargar los datos: {e}', exc_info=True)
 
 # Ingeniería de características
-features = get_features()
+try:
+    features = get_features()
+    logger.info('Ingeniería de características realizada exitosamente')
+    logger.debug(f'Características: {features}')
+except Exception as e:
+    logger.error(f'Error al realizar la ingeniería de características: {e}', exc_info=True)
 
 # Transformar las variables sesgadas
-df_train['SalePrice'] = np.log(df_train['SalePrice'])
+try:
+    df_train['SalePrice'] = np.log(df_train['SalePrice'])
+    logger.info('Transformación de la variable sesgada realizada exitosamente')
+    logger.debug(f'Primeras 5 filas de "SalePrice" transformado: {df_train["SalePrice"].head()}')
+except Exception as e:
+    logger.error(f'Error al transformar la variable sesgada: {e}', exc_info=True)
 
 # Normalizar o estandarizar las variables
-scaler = StandardScaler()
-df_train[features] = scaler.fit_transform(df_train[features])
+try:
+    scaler = StandardScaler()
+    df_train[features] = scaler.fit_transform(df_train[features])
+    logger.info('Normalización de las variables realizada exitosamente')
+    logger.debug(f'Primeras 5 filas de las variables normalizadas: {df_train[features].head()}')
+except Exception as e:
+    logger.error(f'Error al normalizar las variables: {e}', exc_info=True)
+
 
 # Guardar el estado del scaler
-save_model(scaler, 'data/prep/scaler.pkl')
+try:
+    save_model(scaler, 'data/prep/scaler.pkl')
+    logger.info('El estado del scaler se ha guardado exitosamente')
+except Exception as e:
+    logger.error(f'Error al guardar el estado del scaler: {e}', exc_info=True)
+
 
 # Definición de variables para el entrenamiento
 X = df_train[features]
@@ -68,6 +115,14 @@ imputer = SimpleImputer(strategy='mean')
 X_train_imputed = imputer.fit_transform(X_train)
 
 # Guardar el estado del imputer
+try:
+    save_model(imputer, 'data/prep/imputer.pkl')
+    logger.info('El estado del imputer se ha guardado exitosamente')
+except Exception as e:
+    logger.error(f'Error al guardar el estado del imputer: {e}', exc_info=True)
+    
+
+
 save_model(imputer, 'data/prep/imputer.pkl')
 
 # Selección automática de características
@@ -78,8 +133,13 @@ X_train_selected = selector.fit_transform(X_train_imputed, y_train)
 save_model(selector, 'data/prep/selector.pkl')
 
 # Guardar los datos preprocesados
-save_data(X_train_selected, 'data/prep/X_train_selected.npy')
-save_data(y_train, 'data/prep/y_train.npy')
+try:
+    save_data(X_train_selected, 'data/prep/X_train_selected.npy')
+    save_data(y_train, 'data/prep/y_train.npy')
+    logger.info('Los datos preprocesados se han guardado exitosamente')
+except Exception as e:
+    logger.error(f'Error al guardar los datos preprocesados: {e}', exc_info=True)
+
 
 # Guardar los conjuntos de validación y prueba
 save_data(X_val, 'data/prep/X_val.npy')
@@ -87,5 +147,4 @@ save_data(y_val, 'data/prep/y_val.npy')
 save_data(X_test, 'data/prep/X_test.npy')
 save_data(y_test, 'data/prep/y_test.npy')
 
-print('El preprocesamiento de datos se ha llevado con exito, '
-      'puede proceder a entrenar el modelo.')
+logger.info('El preprocesamiento de datos se ha llevado con éxito, puede proceder a entrenar el modelo.')
