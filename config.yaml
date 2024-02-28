@@ -1,15 +1,17 @@
 best_model:
   hyperparameters:
-    n_estimators: 100  # número de árboles
-    max_depth: 6      # máxima profundidad
+    n_estimators: 130  # número de árboles
+    max_depth: 4      # máxima profundidad
     learning_rate: 0.1  # tasa de aprendizaje
-    gamma: 0.0  # mínimo descenso de pérdida para hacer una partición
-    subsample: 0.6  # proporción de muestras para cada árbol
-    colsample_bytree: 0.6  # proporción de columnas para cada árbol
+    gamma: 0.001  # mínimo descenso de pérdida para hacer una partición
+    subsample: 0.7  # proporción de muestras para cada árbol
+    colsample_bytree: 0.55  # proporción de columnas para cada árbol
     reg_lambda: 1.0  # término de regularización L2
-    reg_alpha: 0.1  # término de regularización L1
-  seed: 42  # la semilla
+    reg_alpha: 0.01  # término de regularización L1
+  seed: 698465  # la semilla
 
+#{'colsample_bytree': 0.55, 'gamma': 0.001, 'learning_rate': 0.1, 'max_depth': 4, 'n_estimators': 130, 'reg_alpha': 0.01, 'reg_lambda': 1.0, 'subsample': 0.7}
+#El script se ejecutó en: 3389.5166079998016 segundos
 
-
-#{'colsample_bytree': 0.6, 'gamma': 0.0, 'learning_rate': 0.1, 'max_depth': 3, 'n_estimators': 100, 'reg_alpha': 0.1, 'reg_lambda': 1.0, 'subsample': 0.6}
+#{'colsample_bytree': 0.6, 'gamma': 0.0, 'learning_rate': 0.1, 'max_depth': 5, 'n_estimators': 120, 'reg_alpha': 0.05, 'reg_lambda': 0.8, 'subsample': 0.7}
+#{'colsample_bytree': 0.6, 'gamma': 0.0, 'learning_rate': 0.1, 'max_depth': 6, 'n_estimators': 100, 'reg_alpha': 0.1, 'reg_lambda': 1.0, 'subsample': 0.6}
