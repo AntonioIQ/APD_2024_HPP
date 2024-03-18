@@ -63,6 +63,11 @@ outils.py: Define funciones para cargar y guardar datos y modelos, y para verifi
 
 train.py: Este script carga los datos preprocesados, entrena un modelo XGBoost, evalúa el modelo y guarda tanto el modelo como las métricas de evaluación.
 
+## Arquitectura
+![Arquitectura del Producto de Datos](Images/Arquitectura.png)
+
+
+
 ## Cómo usar
 
 1. Asegúrate de tener instaladas todas las librerías necesarias. Puedes instalarlas mediante el método pip
@@ -74,7 +79,7 @@ python prep.py
 3. Ejecuta el script train.py para entrenar el modelo y evaluarlo:
 python train.py
 
-3. Ahora puedes usar el modelo entrenado para hacer predicciones con el script inference.py:
+3. Usar el modelo entrenado para hacer predicciones con el script inference.py:
 python inference.py
 
 ## Resultados
